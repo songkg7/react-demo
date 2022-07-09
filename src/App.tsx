@@ -1,12 +1,20 @@
 import React from 'react';
 import './App.css';
 
-function Header({title}: { title: string }) {
+interface HeaderProps {
+    title: string,
+    onChangeMode: (event: React.MouseEvent<HTMLElement>) => void
+}
+
+function Header({title, onChangeMode}: HeaderProps) {
     return (
         <header>
-            <h1><a href="/">{title}</a></h1>
+            <h1><a href="/" onClick={function (event) {
+                event.preventDefault()
+                onChangeMode(event)
+            }}>{title}</a></h1>
         </header>
-    )
+    );
 }
 
 interface Topic {
@@ -17,32 +25,37 @@ interface Topic {
 
 interface TopicProps {
     topics: Topic[]
+    onChangeMode: (id: number) => void
 }
 
-function Nav({topics}: TopicProps) {
-    const lis: any[] = []
-    topics.forEach((value, index) => {
-        lis.push(<li key={index}><a href={'/read/' + index}>{value.title}</a></li>)
-    })
+function Nav({topics, onChangeMode}: TopicProps) {
     return (
         <nav>
             <ol>
-                {lis}
+                {topics.map(item => {
+                    return (
+                        <li key={item.id}>
+                            <a href={'/read/' + item.id} onClick={() => {
+                                onChangeMode(item.id)
+                            }}>{item.title}</a>
+                        </li>
+                    )
+                })}
             </ol>
         </nav>
     )
 }
 
-interface Article {
-    title: String,
-    body: String
+interface ArticleProps {
+    title: string,
+    body: string
 }
 
-function Article(article: Article) {
+function Article({title, body}: ArticleProps) {
     return (
         <article>
-            <h2>{article.title}</h2>
-            {article.body}
+            <h2>{title}</h2>
+            {body}
         </article>
     )
 }
@@ -55,8 +68,12 @@ function App() {
     ]
     return (
         <div className="App">
-            <Header title="REACT"></Header>
-            <Nav topics={topics}></Nav>
+            <Header title="REACT" onChangeMode={function () {
+                alert('Header');
+            }}></Header>
+            <Nav topics={topics} onChangeMode={function (id: number) {
+                alert(id)
+            }}></Nav>
             <Article title="Welcome" body="Hello, WEB"></Article>
         </div>
     );
