@@ -1,35 +1,63 @@
 import React from 'react';
 import './App.css';
 
-function Header() {
-    return <header>
-        <h1><a href="/">React Web</a></h1>
-    </header>
+function Header({title}: { title: string }) {
+    return (
+        <header>
+            <h1><a href="/">{title}</a></h1>
+        </header>
+    )
 }
 
-function Nav() {
-    return <nav>
-        <ol>
-            <li><a href="/read/1">html</a></li>
-            <li><a href="/read/2">css</a></li>
-            <li><a href="/read/3">js</a></li>
-        </ol>
-    </nav>
+interface Topic {
+    id: number,
+    title: string,
+    body: string
 }
 
-function Article() {
-    return <article>
-        <h2>Welcome</h2>
-        Hello, WEB
-    </article>
+interface TopicProps {
+    topics: Topic[]
+}
+
+function Nav({topics}: TopicProps) {
+    const lis: any[] = []
+    topics.forEach((value, index) => {
+        lis.push(<li key={index}><a href={'/read/' + index}>{value.title}</a></li>)
+    })
+    return (
+        <nav>
+            <ol>
+                {lis}
+            </ol>
+        </nav>
+    )
+}
+
+interface Article {
+    title: String,
+    body: String
+}
+
+function Article(article: Article) {
+    return (
+        <article>
+            <h2>{article.title}</h2>
+            {article.body}
+        </article>
+    )
 }
 
 function App() {
+    const topics: Topic[] = [
+        {id: 1, title: 'html', body: 'html is ...'},
+        {id: 2, title: 'css', body: 'css is ...'},
+        {id: 3, title: 'javascript', body: 'javascript is ...'},
+    ]
     return (
         <div className="App">
-            <Header></Header>
-            <Nav></Nav>
-            <Article></Article>
+            <Header title="REACT"></Header>
+            <Nav topics={topics}></Nav>
+            <Article title="Welcome" body="Hello, WEB"></Article>
         </div>
     );
 }
